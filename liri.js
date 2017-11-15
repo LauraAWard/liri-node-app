@@ -3,13 +3,11 @@
 var twitter = require("twitter");
 var spotify = require("node-spotify-api");
 var request = require("request");
+var fs = require("fs");
 
 var keys = require("./keys.js");
 
-
-
 var twitterKeys = keys.twitterKeys;
-console.log(twitterKeys);
 
 var command = "";
 var parameter = "";
@@ -28,35 +26,33 @@ if (argString.length >= 3) {
 				parameter += argString[i];
 			}
 		}
-
-// parameter = argString.slice(3);
-// 	parameter = parameter.toString().trim();
-// 		if(parameter.indexOf(",") > -1) {
-// 	    parameter = parameter.split(",").join("+");
-// 		}
 	}
 }
 
-switch(command) {
+heyLiri();
 
-	case "my-tweets":
-		// ...show last 20 tweets and when they were created at
-		break;
-	case "spotify-this-song":
-		// ...
-		break;
-	case "movie-this":
-		omdb();
-		break;
-	case "do-what-it-says":
-		// ...
-		break;
+function heyLiri() {
 
-	// default:
-		// ...
+	switch(command) {
 
+		case "my-tweets":
+			// ...show last 20 tweets and when they were created at
+			break;
+		case "spotify-this-song":
+			console.log("at spotify");
+			break;
+		case "movie-this":
+			omdb();
+			break;
+		case "do-what-it-says":
+			whateverItSays();
+			break;
 
-}
+		// default:
+			// ...
+	}		
+
+};
 
 
 function omdb() {
@@ -96,4 +92,24 @@ function omdb() {
 		  	console.log("OMDB returned the following error: " + error);
 		}
 	});
+};
+
+function whateverItSays() {
+
+	var itSaysArray = [];
+
+	fs.readFile("./random.txt", "utf8", function(error, data) {
+
+		if (error) {
+			return console.log(error);
+		}
+
+		itSaysArray = data.split(",");
+
+		command = itSaysArray[0];
+		parameter = itSaysArray[1];
+
+		heyLiri();
+	});
+
 };
