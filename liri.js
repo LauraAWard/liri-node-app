@@ -39,7 +39,7 @@ function heyLiri() {
 			// ...show last 20 tweets and when they were created at
 			break;
 		case "spotify-this-song":
-			console.log("at spotify");
+			spotifyIt();
 			break;
 		case "movie-this":
 			omdb();
@@ -51,6 +51,65 @@ function heyLiri() {
 		// default:
 			// ...
 	}		
+
+};
+
+
+function spotifyIt() {
+
+	console.log("at spotify");
+
+	var songToSearch = "The Sign Ace of Base";
+
+	if (parameter.length > 0) {
+		songToSearch = parameter;
+	}
+	console.log(songToSearch);
+
+	var client_id = "f4b2faae79f74001b4fe8cc2e24c2835"; 
+	var client_secret = "0c100b002f124551b7afacdf7ebe8aac"; 
+
+
+	var authOptions = {
+	  url: "https://accounts.spotify.com/api/token",
+	  headers: {
+	    "Authorization": "Basic " + (new Buffer(client_id + ":" + client_secret).toString("base64"))
+	  },
+	  form: {
+	    grant_type: "client_credentials"
+	  },
+	  json: true
+	};
+
+	//get access token for Spotify
+	request.post(authOptions, function(error, response, body) {
+	  if (!error && response.statusCode === 200) {
+
+	    // use the access token to access the Spotify Web API
+	    var token = body.access_token;
+	    var options = {
+	      url: "https://api.spotify.com/v1/search?q=" + songToSearch + "&type=track&offset=0&limit=1",
+	      headers: {
+	        "Authorization": "Bearer " + token
+	      },
+	      json: true
+	    };
+	    request.get(options, function(error, response, body) {
+
+	     var artist = body.tracks.items[0].artists[0].name;
+	     var title = body.tracks.items[0].name;
+	     var preview = body.tracks.items[0].preview_url;
+	     var album = body.tracks.items[0].album.name;
+
+	     console.log("Artist: " + artist);
+	     console.log("Song name: " + title);
+	     console.log("Preview link: " + preview);
+	     console.log("Album: " + album);
+
+	    });
+	  }
+	});
+
 
 };
 
