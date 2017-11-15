@@ -36,7 +36,7 @@ function heyLiri() {
 	switch(command) {
 
 		case "my-tweets":
-			// ...show last 20 tweets and when they were created at
+			tweetIt();
 			break;
 		case "spotify-this-song":
 			spotifyIt();
@@ -48,23 +48,39 @@ function heyLiri() {
 			whateverItSays();
 			break;
 
-		// default:
-			// ...
+		default:
+			whateverItSays();
 	}		
 
 };
 
+function tweetIt() {
+	// console.log("at twitter");
+
+	var client = new Twitter({
+	  consumer_key: twitterKeys.consumer_key,
+	  consumer_secret: twitterKeys.consumer_secret,
+	  access_token_key: twitterKeys.access_token_key,
+	  access_token_secret: twitterKeys.access_token_secret
+	});
+	 
+	var params = {screen_name: "WobbleWillie"};
+	client.get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=WobbleWillie&count=2", function(error, tweets, response) {
+	  if (!error) {
+	    console.log(tweets);
+	  }
+	});
+
+};
 
 function spotifyIt() {
 
-	console.log("at spotify");
 
 	var songToSearch = "The Sign Ace of Base";
 
 	if (parameter.length > 0) {
 		songToSearch = parameter;
 	}
-	console.log(songToSearch);
 
 	var client_id = "f4b2faae79f74001b4fe8cc2e24c2835"; 
 	var client_secret = "0c100b002f124551b7afacdf7ebe8aac"; 
