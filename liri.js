@@ -55,21 +55,21 @@ function heyLiri() {
 };
 
 function tweetIt() {
-	// console.log("at twitter");
 
-	var client = new Twitter({
-	  consumer_key: twitterKeys.consumer_key,
-	  consumer_secret: twitterKeys.consumer_secret,
-	  access_token_key: twitterKeys.access_token_key,
-	  access_token_secret: twitterKeys.access_token_secret
-	});
-	 
-	var params = {screen_name: "WobbleWillie"};
-	client.get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=WobbleWillie&count=2", function(error, tweets, response) {
-	  if (!error) {
-	    console.log(tweets);
-	  }
-	});
+	var tweets = new twitter(twitterKeys); 
+
+	tweets.get('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=WobbleWillie&count=20', searchedData); 
+
+	function searchedData(err, data, response) {
+
+		for(var i = 0; i < data.length; i++) {
+			var timeStamp = data[i].created_at; 
+			var tweetText = data[i].text; 
+
+			console.log(timeStamp);
+			console.log(tweetText);
+		}
+	}
 
 };
 
